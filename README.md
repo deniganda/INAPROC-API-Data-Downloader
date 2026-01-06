@@ -1,4 +1,4 @@
-# INAPROC API Downloader
+# INAPROC API Data Downloader
 Website sederhana untuk mengambil data pengadaan dari INAPROC API Gateway dan mengunduhnya sebagai CSV.
 
 ## Cara Download
