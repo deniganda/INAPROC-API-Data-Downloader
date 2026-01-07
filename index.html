@@ -38,6 +38,16 @@
     }
     .divider:before { margin-right: 8px; }
     .divider:after { margin-left: 8px; }
+
+    @media (max-width: 900px) {
+      body { margin: 16px; }
+      input[type="text"], input[type="number"], #apiUrl { width: 100%; }
+      .layout-table, .layout-table tr, .layout-table td { display: block; width: 100%; }
+      .layout-table { border-spacing: 0; }
+      .layout-table td { padding: 0; }
+      .left-col, .right-col { width: 100%; }
+      .sidebox { margin-top: 12px; }
+    }
   </style>
 </head>
 <body>
