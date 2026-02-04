@@ -8,11 +8,22 @@
     body { font-family: Arial, sans-serif; margin: 24px; }
     .panel { max-width: 1100px; margin: 0 auto; }
     label { display: block; margin-bottom: 6px; font-weight: 600; }
+    .param-label { display: block; }
     input, select, button { padding: 8px; font-size: 14px; }
     input[type="text"], input[type="number"] { width: 40ch; }
     #apiUrl { width: 48ch; }
-    button { margin-top: 8px; }
     .field { margin-bottom: 12px; }
+    .hint-mini {
+      width: 16px;
+      height: 16px;
+      padding: 0;
+      border: 1px solid #999;
+      border-radius: 50%;
+      background: transparent;
+      font-size: 11px;
+      vertical-align: middle;
+    }
+    .hint-text { margin-top: 4px; font-size: 12px; font-weight: 400; color: #444; }
     table { border-collapse: collapse; width: 100%; margin-top: 12px; }
     th, td { border: none; padding: 6px 8px; text-align: left; vertical-align: top; }
     th { background: #f0f0f0; }
@@ -139,22 +150,26 @@
 
   <!-- Query parameters (shown based on endpoint) -->
   <div id="fieldKodeKlpd" class="field">
-    <label for="kodeKlpd">Kode KLPD</label>
+    <label for="kodeKlpd" class="param-label">Kode KLPD <button type="button" class="hint-mini" data-help-target="helpKodeKlpd" aria-expanded="false" aria-label="Cara isi Kode KLPD">?</button></label>
+    <div id="helpKodeKlpd" class="hint-text" hidden>Kode instansi bisa dilihat pada SiRUP, contoh: D123.</div>
     <input id="kodeKlpd" type="text" placeholder="D123" />
   </div>
 
   <div id="fieldKodePenyedia" class="field" style="display: none;">
-    <label for="kodePenyedia">Kode Penyedia</label>
+    <label for="kodePenyedia" class="param-label">Kode Penyedia <button type="button" class="hint-mini" data-help-target="helpKodePenyedia" aria-expanded="false" aria-label="Cara isi Kode Penyedia">?</button></label>
+    <div id="helpKodePenyedia" class="hint-text" hidden>Kode penyedia bisa dilihat dari API "/api/v1/ekatalog/paket-e-purchasing", contoh format: 01J8PR1TAZG60XXXXXXXW1NB.</div>
     <input id="kodePenyedia" type="text" placeholder="01J8PR1TAZG60XXXXXXXW1NB" />
   </div>
 
   <div id="fieldKodeTender" class="field" style="display: none;">
-    <label for="kodeTender">Kode Tender</label>
+    <label for="kodeTender" class="param-label">Kode Tender <button type="button" class="hint-mini" data-help-target="helpKodeTender" aria-expanded="false" aria-label="Cara isi Kode Tender">?</button></label>
+    <div id="helpKodeTender" class="hint-text" hidden>Kode tender bisa dilihat dari API "/api/v1/tender/tender-selesai-nilai", contoh format: 10040XXXX00 </div>
     <input id="kodeTender" type="text" placeholder="100002345" />
   </div>
 
   <div id="fieldTahun" class="field">
-    <label for="tahun">Tahun</label>
+    <label for="tahun" class="param-label">Tahun <button type="button" class="hint-mini" data-help-target="helpTahun" aria-expanded="false" aria-label="Cara isi Tahun">?</button></label>
+    <div id="helpTahun" class="hint-text" hidden>Isi tahun data yang ingin diambil, contoh format: 2025 atau 2026.</div>
     <input id="tahun" type="number" placeholder="2025" />
   </div>
 
@@ -172,10 +187,6 @@
     <button id="downloadBtn">Download Data</button>
   </div>
 
-  <!-- Status -->
-  <div id="info">
-    <span id="status"></span>
-  </div>
   <!-- Results table (hidden until data exists) -->
         </td>
         <td class="right-col">
@@ -200,6 +211,9 @@
       </tr>
       <tr>
         <td colspan="2">
+          <div id="info">
+            <span id="status"></span>
+          </div>
           <div id="tableWrap" class="table-wrap" style="display: none;">
             <table id="table"></table>
           </div>
@@ -595,6 +609,26 @@
     updateFieldVisibility(getEndpointConfig());
     document.getElementById("apiUrl").addEventListener("change", () => {
       updateFieldVisibility(getEndpointConfig());
+    });
+
+    // Toggle hint text on click/tap (mobile-friendly).
+    const hints = document.querySelectorAll(".hint-mini[data-help-target]");
+    const helps = document.querySelectorAll(".hint-text");
+    hints.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-help-target");
+        const panel = id ? document.getElementById(id) : null;
+        if (!panel) return;
+
+        const open = panel.hidden;
+        helps.forEach((el) => { el.hidden = true; });
+        hints.forEach((b) => b.setAttribute("aria-expanded", "false"));
+
+        if (open) {
+          panel.hidden = false;
+          btn.setAttribute("aria-expanded", "true");
+        }
+      });
     });
   </script>
 </body>
