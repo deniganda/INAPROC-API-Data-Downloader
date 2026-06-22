@@ -199,7 +199,8 @@
             <p>1) Isi Token API yang didapatkan dari https://data.inaproc.id/portal/.</p>
             <p>2) Pilih endpoint data yang ingin diambil, pastikan Token API punya akses ke endpoint tersebut.</p>
             <p>3) Isi parameter yang tersedia.</p>
-            <p>4) Klik Show Data untuk menampilkan data atau Download Data untuk mengunduh CSV.</p>
+            <p>4) Jalankan <code>node server.js</code>, lalu buka <code>http://127.0.0.1:3000</code>.</p>
+            <p>5) Klik Show Data untuk menampilkan data atau Download Data untuk mengunduh CSV.</p>
             <p class="small">Debug logging membantu melihat request/response. Buka DevTools (F12), lalu lihat tab Console.</p>
           </div>
           <div class="sidebox">
@@ -274,6 +275,13 @@
         limit: meta?.limit,
         meta
       };
+    }
+
+    // Route upstream requests through a local proxy to avoid browser CORS blocks.
+    function getProxyUrl(targetUrl) {
+      const proxyUrl = new URL("/proxy", window.location.origin);
+      proxyUrl.searchParams.set("target", targetUrl);
+      return proxyUrl.toString();
     }
 
     // Toggle buttons during fetch.
@@ -412,7 +420,7 @@
               console.log("[debug] request", url);
             }
 
-            const res = await fetch(url, {
+            const res = await fetch(getProxyUrl(url), {
               method: "GET",
               headers: {
                 "Authorization": `Bearer ${token}`
@@ -512,7 +520,12 @@
         }
         return [];
       } catch (err) {
-        setStatus("Getting data failed.");
+        const isFailedFetch = err instanceof TypeError && err.message === "Failed to fetch";
+        if (isFailedFetch) {
+          setStatus("Request failed. Pastikan halaman dibuka lewat server lokal ini: jalankan node server.js lalu akses http://127.0.0.1:3000.");
+        } else {
+          setStatus("Getting data failed.");
+        }
         if (debug) {
           console.log("[debug] exception", err);
         }

@@ -8,14 +8,22 @@ Website sederhana untuk mengambil data pengadaan dari INAPROC API Gateway dan me
 - Kalau tetap gagal, status akan tampil gagal dan kamu bisa coba ulang.
 - Mau lihat alasan gagal? Aktifkan `Debug logging` lalu cek Console di DevTools (F12).
 
-Live Demo: https://inaproc-api-downloader.vercel.app
-
 ## Cara Menjalankan Secara Lokal
 1) Download source code:
    - Opsi Git: `git clone https://github.com/deniganda/INAPROC-API-Downloader.git`
    - Opsi ZIP: buka repo di GitHub, klik `Code` lalu pilih `Download ZIP`.
-2) Pastikan file `index.html` sudah ada di komputer.
-3) Buka `index.html` langsung di browser (double click)
+2) Install Node.js jika belum ada:
+   - Download installer dari https://nodejs.org/
+   - Atau install lewat package manager OS masing-masing
+   - Verifikasi dengan `node -v`
+3) Dari folder project, jalankan `node server.js`
+4) Buka `http://127.0.0.1:3000` di browser
+
+Catatan:
+- Halaman ini memakai proxy lokal di `/proxy` agar request ke `https://data.inaproc.id` tidak diblokir CORS.
+- Proxy ini bukan pihak ketiga. Yang meneruskan request adalah `server.js` yang Anda jalankan sendiri di mesin atau server Anda.
+- Alurnya: browser -> server lokal Anda -> API INAPROC.
+- Jangan buka `index.html` langsung via `file://` atau Live Server lain tanpa proxy ini.
 
 ## Cara Penggunaan
 1) Isi token API dari https://data.inaproc.id/portal/
